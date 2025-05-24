@@ -1,0 +1,94 @@
+<resources>
+    <string name="app_name">TechLift</string>
+    
+    <!-- כללי -->
+    <string name="welcome">ברוכים הבאים ל-TechLift</string>
+    <string name="slogan">הדרך שלך להייטק מתחילה כאן</string>
+    <string name="next">הבא</string>
+    <string name="back">חזרה</string>
+    <string name="start">בואו נתחיל</string>
+    <string name="continue_btn">המשך</string>
+    
+    <!-- התחברות והרשמה -->
+    <string name="login">התחברות</string>
+    <string name="register">הרשמה</string>
+    <string name="email">דוא״ל</string>
+    <string name="password">סיסמה</string>
+    <string name="full_name">שם מלא</string>
+    <string name="register_link">משתמש חדש? הירשם כאן</string>
+    <string name="select_path">בחר מסלול התמחות</string>
+    
+    <!-- מסלולים -->
+    <string name="dev_path">פיתוח תוכנה</string>
+    <string name="qa_path">QA</string>
+    <string name="cyber_path">אבטחת מידע</string>
+    <string name="data_path">Data</string>
+    <string name="noc_path">NOC</string>
+    
+    <!-- תיאורי מסלולים -->
+    <string name="dev_path_desc">למד את יסודות התכנות, פיתוח צד שרת ופיתוח צד לקוח עם שפות וטכנולוגיות מודרניות</string>
+    <string name="qa_path_desc">למד את יסודות בדיקות התוכנה, כלי בדיקות אוטומטיות ובדיקות אבטחה</string>
+    <string name="cyber_path_desc">למד אבטחת רשתות, אבטחת מערכות ותשתיות, הצפנה ופתרון אירועי אבטחה</string>
+    <string name="data_path_desc">למד ניתוח נתונים, למידת מכונה, ויזואליזציה של נתונים ועבודה עם כלי Big Data</string>
+    <string name="noc_path_desc">למד ניהול רשתות, ניטור מערכות, פתרון תקלות וטיפול בתשתיות IT</string>
+    
+    <!-- לוח בקרה -->
+    <string name="dashboard">לוח בקרה</string>
+    <string name="hello_user">שלום %1$s</string>
+    <string name="daily_challenge">אתגר יומי</string>
+    <string name="daily_challenge_desc">פתור את אתגר הקוד היומי</string>
+    <string name="roadmaps">מפות דרכים</string>
+    <string name="roadmaps_desc">המשך מהיכן שהפסקת</string>
+    <string name="practice">סביבת תרגול</string>
+    <string name="practice_desc">תרגל קוד בסביבה אינטראקטיבית</string>
+    <string name="interviews">שאלות ראיון</string>
+    <string name="interviews_desc">התכונן לראיונות עבודה</string>
+    <string name="projects">פרויקטים מוצעים</string>
+    <string name="projects_desc">בנה תיק עבודות</string>
+    <string name="community">קהילה</string>
+    <string name="community_desc">התחבר עם אנשי מקצוע</string>
+    
+    <!-- מפת דרכים -->
+    <string name="roadmap_title">מפות דרכים לימודיות</string>
+    <string name="search_path">חיפוש מסלול...</string>
+    <string name="dev_roadmap">מסלול פיתוח תוכנה</string>
+    <string name="continue_learning">המשך ללמוד</string>
+    
+    <!-- שלבים במסלול פיתוח -->
+    <string name="stage1_title">יסודות התכנות</string>
+    <string name="stage1_status">בתהליך</string>
+    <string name="stage2_title">פיתוח צד שרת</string>
+    <string name="stage2_status">נעול</string>
+    <string name="stage3_title">פיתוח צד לקוח</string>
+    <string name="stage3_status">נעול</string>
+    
+    <!-- שיעורים -->
+    <string name="lesson1_1">מבוא לאלגוריתמים</string>
+    <string name="lesson1_2">שפת JavaScript</string>
+    <string name="lesson1_3">עקרונות תכנות מונחה עצמים</string>
+    <string name="lesson2_1">Node.js ו-Express</string>
+    <string name="lesson2_2">בסיסי נתונים</string>
+    <string name="lesson2_3">אבטחת API</string>
+    <string name="lesson3_1">React</string>
+    <string name="lesson3_2">ניהול מצב עם Redux</string>
+    <string name="lesson3_3">בדיקות פרונט-אנד</string>
+    
+    <!-- לשוניות שיעור -->
+    <string name="content_tab">תוכן</string>
+    <string name="practice_tab">תרגול</string>
+    <string name="quiz_tab">בוחן</string>
+    
+    <!-- סביבת תרגול -->
+    <string name="code_editor">עורך קוד</string>
+    <string name="instructions">הוראות</string>
+    <string name="output">פלט</string>
+    <string name="run_code">הרץ קוד</string>
+    <string name="submit_solution">שלח פתרון</string>
+    
+    <!-- אתגר יומי -->
+    <string name="code_challenge">אתגר קוד יומי</string>
+    <string name="check_solution">בדוק פתרון</string>
+    <string name="challenge_title">היפוך מחרוזת</string>
+    <string name="challenge_description">כתוב פונקציה שמקבלת מחרוזת ומחזירה אותה בסדר הפוך, ללא שימוש בפונקציות מובנות של היפוך.</string>
+    <string name="challenge_difficulty">קל</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- ערכת צבעים של TechLift -->
+    <color name="primary">#3949AB</color>
+    <color name="primary_dark">#303F9F</color>
+    <color name="primary_light">#C5CAE9</color>
+    <color name="accent">#FF4081</color>
+    <color name="secondary">#00BFA5</color>
+    
+    <color name="background">#F5F5F5</color>
+    <color name="surface">#FFFFFF</color>
+    <color name="error">#B00020</color>
+    
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="text_hint">#BDBDBD</color>
+    
+    <!-- צבעים לרכיבים מיוחדים -->
+    <color name="card_background">#FFFFFF</color>
+    <color name="status_completed">#4CAF50</color>
+    <color name="status_in_progress">#FFC107</color>
+    <color name="status_locked">#9E9E9E</color>
+</resources>
