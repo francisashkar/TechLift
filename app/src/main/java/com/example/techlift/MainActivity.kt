@@ -1,92 +1,113 @@
 package com.example.techlift
 
-import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import com.google.android.material.card.MaterialCardView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import com.example.techlift.ui.fragment.HomeFragment
+import com.example.techlift.ui.fragment.LearnFragment
+import com.example.techlift.ui.fragment.ProfileFragment
+import com.example.techlift.ui.fragment.RoadmapsFragment
+import com.example.techlift.util.FirebaseHelper
+import com.example.techlift.util.FirebaseTest
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
-    // נתוני משתמש לדוגמה (בדמו אמיתי זה יגיע ממסד נתונים או העדפות)
-    private val mockUserName = "ישראל ישראלי"
-
-    // הגדרת רכיבי הממשק
+    
     private lateinit var toolbar: Toolbar
-    private lateinit var welcomeUserText: TextView
-    private lateinit var dailyChallengeCard: MaterialCardView
-    private lateinit var roadmapsCard: MaterialCardView
-    private lateinit var practiceCard: MaterialCardView
-    private lateinit var interviewsCard: MaterialCardView
-    private lateinit var projectsCard: MaterialCardView
-    private lateinit var communityCard: MaterialCardView
-
+    private lateinit var bottomNavigation: BottomNavigationView
+    private val firebaseHelper = FirebaseHelper.getInstance()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        // אתחול הרכיבים
-        toolbar = findViewById(R.id.toolbar)
-        welcomeUserText = findViewById(R.id.welcomeUserText)
-        dailyChallengeCard = findViewById(R.id.dailyChallengeCard)
-        roadmapsCard = findViewById(R.id.roadmapsCard)
-        practiceCard = findViewById(R.id.practiceCard)
-        interviewsCard = findViewById(R.id.interviewsCard)
-        projectsCard = findViewById(R.id.projectsCard)
-        communityCard = findViewById(R.id.communityCard)
-
-        // הגדרת הסרגל העליון
-        setSupportActionBar(toolbar)
-        supportActionBar?.title = getString(R.string.dashboard)
-
-        // הגדרת טקסט הברכה
-        welcomeUserText.text = getString(R.string.hello_user, mockUserName)
-
-        // הגדרת פעולות הקלקה על הכרטיסיות
-        setupCardClickListeners()
-    }
-
-    private fun setupCardClickListeners() {
-        // אתגר יומי
-        dailyChallengeCard.setOnClickListener {
-            showFeatureNotAvailableMessage(getString(R.string.daily_challenge))
-        }
-
-        // מפות דרכים
-        roadmapsCard.setOnClickListener {
-            // מעבר למסך מפות הדרכים
-            val intent = Intent(this, RoadmapsActivity::class.java)
-            startActivity(intent)
-        }
-
-        // סביבת תרגול
-        practiceCard.setOnClickListener {
-            showFeatureNotAvailableMessage(getString(R.string.practice))
-        }
-
-        // שאלות ראיון
-        interviewsCard.setOnClickListener {
-            showFeatureNotAvailableMessage(getString(R.string.interviews))
-        }
-
-        // פרויקטים מוצעים
-        projectsCard.setOnClickListener {
-            showFeatureNotAvailableMessage(getString(R.string.projects))
-        }
-
-        // קהילה
-        communityCard.setOnClickListener {
-            showFeatureNotAvailableMessage(getString(R.string.community))
+        
+        try {
+            // Initialize views
+            toolbar = findViewById(R.id.toolbar)
+            bottomNavigation = findViewById(R.id.bottomNavigation)
+            
+            // Set up toolbar
+            setSupportActionBar(toolbar)
+            
+            // Set up bottom navigation
+            setupBottomNavigation()
+            
+            // Set default fragment
+            if (savedInstanceState == null) {
+                loadFragment(HomeFragment())
+                bottomNavigation.selectedItemId = R.id.navigation_home
+            }
+        } catch (e: Exception) {
+            // Handle any exceptions during initialization
+            Toast.makeText(this, "Error initializing app: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
-
-    private fun showFeatureNotAvailableMessage(featureName: String) {
-        // הודעה שהתכונה אינה זמינה בדמו
-        Toast.makeText(
-            this,
-            "התכונה '$featureName' אינה זמינה בגרסת הדמו",
-            Toast.LENGTH_SHORT
-        ).show()
+    
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        return true
+    }
+    
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_test_firebase -> {
+                testFirebaseConnectivity()
+                true
+            }
+            R.id.action_logout -> {
+                logout()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+    
+    private fun testFirebaseConnectivity() {
+        lifecycleScope.launch {
+            FirebaseTest.testFirebaseConnectivity(this@MainActivity)
+        }
+    }
+    
+    private fun logout() {
+        firebaseHelper.signOut()
+        finish()
+        // Redirect to login activity
+        startActivity(android.content.Intent(this, LoginActivity::class.java))
+    }
+    
+    private fun setupBottomNavigation() {
+        bottomNavigation.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.navigation_home -> {
+                    loadFragment(HomeFragment())
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_roadmaps -> {
+                    loadFragment(RoadmapsFragment())
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_learn -> {
+                    loadFragment(LearnFragment())
+                    return@setOnItemSelectedListener true
+                }
+                R.id.navigation_profile -> {
+                    loadFragment(ProfileFragment())
+                    return@setOnItemSelectedListener true
+                }
+                else -> false
+            }
+        }
+    }
+    
+    private fun loadFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
     }
 }
