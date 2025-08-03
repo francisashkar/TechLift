@@ -45,6 +45,18 @@
         <activity
             android:name=".RoadmapsActivity"
             android:exported="false" />
+            
+        <activity
+            android:name=".RoadmapDetailActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".LessonActivity"
+            android:exported="false" />
+            
+        <activity
+            android:name=".QuizActivity"
+            android:exported="false" />
         
     </application>
 

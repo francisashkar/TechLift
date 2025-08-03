@@ -91,7 +91,6 @@
     <string name="logout">התנתק</string>
     <string name="profile_updated">הפרופיל עודכן בהצלחה</string>
     <string name="welcome_to_techlift">Welcome to TechLift</string>
-    <string name="explore_roadmaps">Explore Roadmaps</string>
     
     <!-- Bottom Navigation -->
     <string name="title_home">Home</string>

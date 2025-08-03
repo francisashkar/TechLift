@@ -17,37 +17,37 @@ class RoadmapsActivity : AppCompatActivity(), RoadmapAdapter.OnRoadmapClickListe
     private lateinit var roadmapsRecyclerView: RecyclerView
     private lateinit var roadmapAdapter: RoadmapAdapter
 
-    // נתוני הדמה למסלולים
+    // מסלולים חדשים - כל 5 המסלולים עובדים
     private val mockRoadmaps = listOf(
         Roadmap(
-            id = "dev",
-            title = "פיתוח תוכנה",
-            description = "למד את יסודות התכנות, פיתוח צד שרת ופיתוח צד לקוח עם שפות וטכנולוגיות מודרניות",
+            id = "frontend",
+            title = "פיתוח צד לקוח",
+            description = "למד HTML, CSS, JavaScript, React, Vue.js וטכנולוגיות מודרניות לפיתוח ממשקי משתמש",
+            progress = 30
+        ),
+        Roadmap(
+            id = "backend",
+            title = "פיתוח צד שרת",
+            description = "למד Node.js, Python, Java, Spring Boot, APIs ופיתוח מערכות צד שרת",
+            progress = 45
+        ),
+        Roadmap(
+            id = "mobile",
+            title = "פיתוח אפליקציות מובייל",
+            description = "למד React Native, Flutter, Android Native ו-iOS development",
+            progress = 20
+        ),
+        Roadmap(
+            id = "devops",
+            title = "DevOps והנדסת תשתיות",
+            description = "למד Docker, Kubernetes, CI/CD, AWS, Azure וניהול תשתיות ענן",
             progress = 15
         ),
         Roadmap(
-            id = "qa",
-            title = "QA ובדיקות תוכנה",
-            description = "למד את יסודות בדיקות התוכנה, כלי בדיקות אוטומטיות ובדיקות אבטחה",
-            progress = 0
-        ),
-        Roadmap(
-            id = "cyber",
-            title = "אבטחת מידע וסייבר",
-            description = "למד אבטחת רשתות, אבטחת מערכות ותשתיות, הצפנה ופתרון אירועי אבטחה",
-            progress = 0
-        ),
-        Roadmap(
-            id = "data",
-            title = "מדעי נתונים",
-            description = "למד ניתוח נתונים, למידת מכונה, ויזואליזציה של נתונים ועבודה עם כלי Big Data",
-            progress = 0
-        ),
-        Roadmap(
-            id = "noc",
-            title = "תפעול רשת (NOC)",
-            description = "למד ניהול רשתות, ניטור מערכות, פתרון תקלות וטיפול בתשתיות IT",
-            progress = 0
+            id = "ai",
+            title = "בינה מלאכותית ולמידת מכונה",
+            description = "למד Python, TensorFlow, PyTorch, NLP, Computer Vision ו-ML algorithms",
+            progress = 10
         )
     )
 
@@ -78,21 +78,12 @@ class RoadmapsActivity : AppCompatActivity(), RoadmapAdapter.OnRoadmapClickListe
     }
 
     override fun onRoadmapClick(roadmap: Roadmap, position: Int) {
-        // בדמו, רק המסלול הראשון (פיתוח) זמין
-        if (roadmap.id == "dev") {
-            // כאן יהיה מעבר למסך פרטי המסלול
-            Toast.makeText(
-                this,
-                "פתיחת מסלול ${roadmap.title}",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            Toast.makeText(
-                this,
-                "מסלול ${roadmap.title} אינו זמין כרגע בדמו",
-                Toast.LENGTH_SHORT
-            ).show()
+        // כל המסלולים עובדים כעת - מעבר למסך פרטי המסלול
+        val intent = Intent(this, RoadmapDetailActivity::class.java).apply {
+            putExtra(RoadmapDetailActivity.EXTRA_ROADMAP_ID, roadmap.id)
+            putExtra(RoadmapDetailActivity.EXTRA_ROADMAP_TITLE, roadmap.title)
         }
+        startActivity(intent)
     }
 
     override fun onSupportNavigateUp(): Boolean {
