@@ -91,6 +91,12 @@
     <string name="logout">התנתק</string>
     <string name="profile_updated">הפרופיל עודכן בהצלחה</string>
     <string name="welcome_to_techlift">Welcome to TechLift</string>
+    <string name="profile_image">תמונת פרופיל</string>
+    <string name="view_posts">צפה בפוסטים</string>
+    <string name="share_location">שתף מיקום</string>
+    <string name="view_community_posts">צפה בפוסטים</string>
+    <string name="community_map_info">מפת הקהילה</string>
+    <string name="community_map_instructions">לחץ על המשתמשים במפה לראות את הפרופיל שלהם</string>
     
     <!-- Bottom Navigation -->
     <string name="title_home">Home</string>

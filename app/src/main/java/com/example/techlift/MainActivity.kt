@@ -16,6 +16,8 @@ import com.example.techlift.util.FirebaseHelper
 import com.example.techlift.util.FirebaseTest
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import com.example.techlift.ui.fragment.CommunityFragment
+import com.example.techlift.ui.fragment.PostsFragment
 
 class MainActivity : AppCompatActivity() {
     
@@ -85,20 +87,28 @@ class MainActivity : AppCompatActivity() {
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_home -> {
-                    loadFragment(HomeFragment())
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, HomeFragment())
+                        .commit()
+                    true
                 }
                 R.id.navigation_roadmaps -> {
-                    loadFragment(RoadmapsFragment())
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, RoadmapsFragment())
+                        .commit()
+                    true
                 }
-                R.id.navigation_learn -> {
-                    loadFragment(LearnFragment())
-                    return@setOnItemSelectedListener true
+                R.id.communityFragment -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, CommunityFragment())
+                        .commit()
+                    true
                 }
                 R.id.navigation_profile -> {
-                    loadFragment(ProfileFragment())
-                    return@setOnItemSelectedListener true
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, ProfileFragment())
+                        .commit()
+                    true
                 }
                 else -> false
             }
