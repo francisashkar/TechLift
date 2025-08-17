@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0">
+    <!-- שכבה ראשונה - גוון כחול בהיר -->
+    <path
+        android:fillColor="#64B5F6"
+        android:pathData="M7,14l5,-5 5,5z"/>
+    <!-- שכבה שנייה - גוון כחול כהה יותר -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M4,12l8,-8 8,8h-5v8h-6v-8z"/>
+    <!-- שכבה שלישית - זוהר פנימי -->
+    <path
+        android:fillColor="#BBDEFB"
+        android:pathData="M12,6l-3,3l3,-0.5l3,0.5z"/>
+</vector> 

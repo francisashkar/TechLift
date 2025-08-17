@@ -1,0 +1,174 @@
+package com.example.techlift
+
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
+import android.content.Intent
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.DecelerateInterpolator
+import android.view.animation.OvershootInterpolator
+import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import com.example.techlift.R
+
+/**
+ * מסך פתיחה עם אנימציה שמדגימה את מסע הצמיחה בעולם ההייטק
+ * כולל אנימציית Lottie מותאמת אישית
+ */
+class SplashActivity : AppCompatActivity() {
+    // UI Components
+    private lateinit var rootLayout: ConstraintLayout
+    private lateinit var levelUpArrow: ImageView
+    private lateinit var appNameText: TextView
+    private lateinit var sloganText: TextView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var bottomLine: View
+    
+    // Animation duration
+    private val animationDuration = 3000L
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash)
+        
+        try {
+            // Initialize UI components
+            initializeViews()
+            
+            // Set initial state for animation
+            setupInitialState()
+            
+            // Start animation sequence
+            startAnimation()
+            
+            // Navigate to login after animation completes
+            Handler(Looper.getMainLooper()).postDelayed({
+                navigateToLogin()
+            }, animationDuration)
+        } catch (e: Exception) {
+            // In case of error, just proceed to login after a short delay
+            Handler(Looper.getMainLooper()).postDelayed({
+                navigateToLogin()
+            }, 1000)
+        }
+    }
+    
+    /**
+     * Initialize all UI components
+     */
+    private fun initializeViews() {
+        rootLayout = findViewById(R.id.rootLayout)
+        levelUpArrow = findViewById(R.id.levelUpArrow)
+        appNameText = findViewById(R.id.appNameText)
+        sloganText = findViewById(R.id.sloganText)
+        progressBar = findViewById(R.id.progressBar)
+        bottomLine = findViewById(R.id.bottomLine)
+    }
+    
+    /**
+     * Set initial state for animation - hide components
+     */
+    private fun setupInitialState() {
+        // All components are initially hidden
+        levelUpArrow.alpha = 0f
+        appNameText.alpha = 0f
+        sloganText.alpha = 0f
+        progressBar.alpha = 0f
+        bottomLine.alpha = 0f
+        bottomLine.scaleX = 0f
+        
+        // Position the arrow below screen
+        levelUpArrow.translationY = 300f
+    }
+    
+    /**
+     * Start the animation sequence
+     */
+    private fun startAnimation() {
+        // Arrow fade in
+        val arrowFadeIn = ObjectAnimator.ofFloat(levelUpArrow, View.ALPHA, 0f, 1f).apply {
+            duration = 500
+            startDelay = 200
+        }
+        
+        // Arrow move up
+        val arrowMoveUp = ObjectAnimator.ofFloat(levelUpArrow, View.TRANSLATION_Y, 300f, 0f).apply {
+            duration = 800
+            startDelay = 200
+            interpolator = DecelerateInterpolator()
+        }
+        
+        // App name fade in
+        val appNameFadeIn = ObjectAnimator.ofFloat(appNameText, View.ALPHA, 0f, 1f).apply {
+            duration = 500
+            startDelay = 1000
+        }
+        
+        // App name bounce effect
+        val appNameBounce = ObjectAnimator.ofFloat(appNameText, View.TRANSLATION_Y, 50f, 0f).apply {
+            duration = 700
+            startDelay = 1000
+            interpolator = OvershootInterpolator(1.5f)
+        }
+        
+        // Slogan fade in
+        val sloganFadeIn = ObjectAnimator.ofFloat(sloganText, View.ALPHA, 0f, 1f).apply {
+            duration = 500
+            startDelay = 1500
+        }
+        
+        // Progress bar fade in
+        val progressBarFadeIn = ObjectAnimator.ofFloat(progressBar, View.ALPHA, 0f, 1f).apply {
+            duration = 500
+            startDelay = 2000
+        }
+        
+        // Bottom line expand
+        val lineExpand = ObjectAnimator.ofFloat(bottomLine, View.SCALE_X, 0f, 1f).apply {
+            duration = 700
+            startDelay = 2000
+            interpolator = AccelerateDecelerateInterpolator()
+        }
+        
+        // Bottom line fade in
+        val lineFadeIn = ObjectAnimator.ofFloat(bottomLine, View.ALPHA, 0f, 1f).apply {
+            duration = 500
+            startDelay = 2000
+        }
+        
+        // Run all animations together
+        AnimatorSet().apply {
+            playTogether(
+                arrowFadeIn,
+                arrowMoveUp,
+                appNameFadeIn,
+                appNameBounce,
+                sloganFadeIn,
+                progressBarFadeIn,
+                lineExpand,
+                lineFadeIn
+            )
+            start()
+        }
+    }
+    
+    /**
+     * Navigate to login screen
+     */
+    private fun navigateToLogin() {
+        try {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+            finish()
+        } catch (e: Exception) {
+            finish()
+        }
+    }
+} 

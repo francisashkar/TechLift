@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Allow authenticated users to read and write their own data
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow users to read roadmaps but not modify them
+    match /roadmaps/{roadmapId} {
+      allow read: if request.auth != null;
+      allow write: if false;  // Only admins can modify roadmaps (via Firebase console)
+    }
+    
+    // Allow users to read and create learning progress
+    match /users/{userId}/progress/{progressId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false;  // Don't allow users to delete progress
+    }
+    
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+} 

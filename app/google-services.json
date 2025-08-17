@@ -1,0 +1,41 @@
+{
+  "project_info": {
+    "project_number": "480315638313",
+    "firebase_url": "https://techlift-57b76.firebaseio.com",
+    "project_id": "techlift-57b76",
+    "storage_bucket": "techlift-57b76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:480315638313:android:bfba75d8afc2bbc0f15238",
+        "android_client_info": {
+          "package_name": "com.example.techlift"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "480315638313.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbsWPzRmQ8jOmmC_glFlaukyvNnyFELGQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "480315638313.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1",
+  "measurement_id": "G-H4P5PG633X"
+} 
