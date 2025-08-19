@@ -64,19 +64,30 @@ class LoginActivity : AppCompatActivity() {
             
             // Attempt login with Firebase
             lifecycleScope.launch {
-                val result = firebaseHelper.signIn(email, password)
-                
-                result.fold(
-                    onSuccess = {
+                try {
+                    val result = firebaseHelper.signIn(email, password)
+                    
+                    result.fold(
+                        onSuccess = {
+                            runOnUiThread {
+                                showProgress(false)
+                                Toast.makeText(this@LoginActivity, "התחברת בהצלחה! 🎉", Toast.LENGTH_SHORT).show()
+                                navigateToMainActivity()
+                            }
+                        },
+                        onFailure = { exception ->
+                            runOnUiThread {
+                                showProgress(false)
+                                Toast.makeText(this@LoginActivity, "התחברות נכשלה: ${exception.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+                    )
+                } catch (e: Exception) {
+                    runOnUiThread {
                         showProgress(false)
-                        Toast.makeText(this@LoginActivity, "Login successful", Toast.LENGTH_SHORT).show()
-                        navigateToMainActivity()
-                    },
-                    onFailure = { exception ->
-                        showProgress(false)
-                        Toast.makeText(this@LoginActivity, "Login failed: ${exception.message}", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LoginActivity, "שגיאה בהתחברות: ${e.message}", Toast.LENGTH_LONG).show()
                     }
-                )
+                }
             }
         }
 
@@ -92,38 +103,53 @@ class LoginActivity : AppCompatActivity() {
             val email = emailInput.text.toString().trim()
             
             if (email.isEmpty()) {
-                emailInputLayout.error = "Please enter your email address"
+                emailInputLayout.error = "נא להזין כתובת אימייל"
                 return@setOnClickListener
             }
             
             if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                emailInputLayout.error = "Please enter a valid email address"
+                emailInputLayout.error = "נא להזין כתובת אימייל תקינה"
                 return@setOnClickListener
             }
             
             showProgress(true)
             
             lifecycleScope.launch {
-                val result = firebaseHelper.sendPasswordResetEmail(email)
-                
-                showProgress(false)
-                
-                result.fold(
-                    onSuccess = {
+                try {
+                    val result = firebaseHelper.sendPasswordResetEmail(email)
+                    
+                    result.fold(
+                        onSuccess = {
+                            runOnUiThread {
+                                showProgress(false)
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "אימייל לאיפוס סיסמה נשלח ל-$email",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        },
+                        onFailure = { exception ->
+                            runOnUiThread {
+                                showProgress(false)
+                                Toast.makeText(
+                                    this@LoginActivity,
+                                    "שגיאה בשליחת אימייל לאיפוס: ${exception.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
+                    )
+                } catch (e: Exception) {
+                    runOnUiThread {
+                        showProgress(false)
                         Toast.makeText(
                             this@LoginActivity,
-                            "Password reset email sent to $email",
-                            Toast.LENGTH_LONG
-                        ).show()
-                    },
-                    onFailure = { exception ->
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "Failed to send reset email: ${exception.message}",
+                            "שגיאה בשליחת אימייל לאיפוס: ${e.message}",
                             Toast.LENGTH_LONG
                         ).show()
                     }
-                )
+                }
             }
         }
     }

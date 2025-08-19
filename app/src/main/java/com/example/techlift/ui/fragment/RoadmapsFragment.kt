@@ -21,25 +21,25 @@ class RoadmapsFragment : Fragment(), RoadmapAdapter.OnRoadmapClickListener {
     private lateinit var roadmapsRecyclerView: RecyclerView
     private lateinit var roadmapAdapter: RoadmapAdapter
 
-    // מסלולים חדשים - 3 המסלולים העיקריים
+    // קורסים נוכחיים - 3 הקורסים העיקריים
     private val mockRoadmaps = listOf(
         Roadmap(
             id = "frontend",
-            title = "פיתוח צד לקוח",
+            title = "קורס פיתוח צד לקוח",
             description = "למד HTML, CSS, JavaScript, React, Vue.js וטכנולוגיות מודרניות לפיתוח ממשקי משתמש",
-            progress = 30
+            progress = 0
         ),
         Roadmap(
             id = "backend",
-            title = "פיתוח צד שרת",
+            title = "קורס פיתוח צד שרת",
             description = "למד Node.js, Python, Java, Spring Boot, APIs ופיתוח מערכות צד שרת",
-            progress = 45
+            progress = 0
         ),
         Roadmap(
             id = "ai",
-            title = "בינה מלאכותית ולמידת מכונה",
+            title = "קורס בינה מלאכותית ולמידת מכונה",
             description = "למד Python, TensorFlow, PyTorch, NLP, Computer Vision ו-ML algorithms",
-            progress = 10
+            progress = 0
         )
     )
 

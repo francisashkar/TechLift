@@ -11,6 +11,7 @@ import androidx.appcompat.widget.Toolbar
 import com.example.techlift.data.LearningContentManager
 import com.example.techlift.model.Lesson
 import com.example.techlift.model.Quiz
+import android.view.View
 import android.widget.LinearLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,7 +23,6 @@ class LessonActivity : AppCompatActivity() {
     private lateinit var lessonDescriptionTextView: TextView
     private lateinit var lessonContentWebView: WebView
     private lateinit var takeQuizButton: Button
-    private lateinit var completeLessonButton: Button
     
     private var currentLesson: Lesson? = null
     private var currentQuiz: Quiz? = null
@@ -51,7 +51,6 @@ class LessonActivity : AppCompatActivity() {
         lessonDescriptionTextView = findViewById(R.id.lessonDescription)
         lessonContentWebView = findViewById(R.id.lessonContentWebView)
         takeQuizButton = findViewById(R.id.takeQuizButton)
-        completeLessonButton = findViewById(R.id.completeLessonButton)
         
         // הגדרת הסרגל העליון
         setSupportActionBar(toolbar)
@@ -63,6 +62,9 @@ class LessonActivity : AppCompatActivity() {
         
         // הגדרת מאזיני לחיצה
         setupClickListeners()
+        
+        // הסתרת כפתור השלמת שיעור - שיעורים יושלמו רק דרך קוויז
+        findViewById<Button>(R.id.completeLessonButton).visibility = View.GONE
     }
     
     private fun loadLessonContent(lessonId: String, roadmapId: String) {
@@ -162,75 +164,11 @@ class LessonActivity : AppCompatActivity() {
                 startActivityForResult(intent, 1001)
             }
         }
+    }
+    
 
-        completeLessonButton.setOnClickListener {
-            currentLesson?.let { lesson ->
-                // Mark lesson as completed
-                lesson.isCompleted = true
-                
-                // Update button text and disable it
-                updateCompletionButtonState(true)
-                
-                // Show success message
-                Toast.makeText(this, "השיעור הושלם בהצלחה! 🎉", Toast.LENGTH_SHORT).show()
-                
-                // Update the lesson status in the adapter if we're going back
-                setResult(RESULT_OK)
-                
-                // Save to Firebase
-                saveLessonCompletion(lesson.id)
-            }
-        }
-    }
     
-    private fun updateCompletionButtonState(isCompleted: Boolean) {
-        if (isCompleted) {
-            completeLessonButton.text = "הושלם ✓"
-            completeLessonButton.isEnabled = true
-            completeLessonButton.setBackgroundColor(getColor(R.color.status_completed))
-            completeLessonButton.setOnClickListener {
-                // Allow user to redo the lesson
-                currentLesson?.let { lesson ->
-                    lesson.isCompleted = false
-                    updateCompletionButtonState(false)
-                    Toast.makeText(this, "עכשיו תוכל לבצע את השיעור שוב", Toast.LENGTH_SHORT).show()
-                }
-            }
-        } else {
-            completeLessonButton.text = "השלם שיעור"
-            completeLessonButton.isEnabled = true
-            completeLessonButton.setBackgroundColor(getColor(R.color.primary))
-            completeLessonButton.setOnClickListener {
-                currentLesson?.let { lesson ->
-                    lesson.isCompleted = true
-                    updateCompletionButtonState(true)
-                    Toast.makeText(this, "השיעור הושלם בהצלחה! 🎉", Toast.LENGTH_SHORT).show()
-                    setResult(RESULT_OK)
-                    saveLessonCompletion(lesson.id)
-                }
-            }
-        }
-    }
-    
-    private fun saveLessonCompletion(lessonId: String) {
-        val currentUser = auth.currentUser
-        if (currentUser != null) {
-            // Update user's completed lessons count
-            firestore.collection("users").document(currentUser.uid)
-                .get()
-                .addOnSuccessListener { document ->
-                    val currentCompleted = document?.getLong("completedLessons") ?: 0L
-                    firestore.collection("users").document(currentUser.uid)
-                        .update("completedLessons", currentCompleted + 1)
-                        .addOnSuccessListener {
-                            Toast.makeText(this, "התקדמות נשמרה! 💾", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "שגיאה בשמירת ההתקדמות", Toast.LENGTH_SHORT).show()
-                        }
-                }
-        }
-    }
+
     
     private fun addVideoButton(videoUrl: String) {
         // יצירת כפתור וידאו
@@ -247,7 +185,7 @@ class LessonActivity : AppCompatActivity() {
             }
         }
         
-        // הוספת הכפתור מתחת לכפתור "השלם שיעור"
+        // הוספת הכפתור מתחת לכפתור הקוויז
         val buttonContainer = findViewById<LinearLayout>(R.id.buttonContainer)
         buttonContainer.addView(videoButton)
     }
@@ -269,7 +207,6 @@ class LessonActivity : AppCompatActivity() {
             // Quiz was passed, mark lesson as completed
             currentLesson?.let { lesson ->
                 lesson.isCompleted = true
-                updateCompletionButtonState(true)
                 Toast.makeText(this, "כל הכבוד! השלמת את הקוויז והשיעור! 🎓", Toast.LENGTH_SHORT).show()
                 setResult(RESULT_OK)
             }

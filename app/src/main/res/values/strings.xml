@@ -46,8 +46,8 @@
     <string name="hello_user">שלום, %1$s</string>
     <string name="daily_challenge">אתגר יומי</string>
     <string name="daily_challenge_desc">אתגר קוד יומי לשיפור מיומנויות התכנות שלך</string>
-    <string name="roadmaps">מפות דרכים</string>
-    <string name="roadmaps_desc">מסלולי למידה מותאמים אישית לפיתוח קריירה בהייטק</string>
+    <string name="roadmaps">קורסים נוכחיים</string>
+    <string name="roadmaps_desc">קורסי למידה מותאמים אישית לפיתוח קריירה בהייטק</string>
     <string name="practice">סביבת תרגול</string>
     <string name="practice_desc">תרגל קידוד עם תרגילים אינטראקטיביים ומשימות מעשיות</string>
     <string name="interviews">שאלות ראיון</string>
@@ -85,12 +85,15 @@
     <string name="profile_title">פרופיל</string>
     <string name="edit_profile">ערוך פרופיל</string>
     <string name="save_profile">שמור שינויים</string>
+    <string name="save_changes">שמור שינויים</string>
     <string name="change_photo">שנה תמונה</string>
+    <string name="change_profile_photo">שנה תמונת פרופיל</string>
+    <string name="tap_to_change_photo">לחץ על התמונה לשינוי תמונת הפרופיל</string>
     <string name="specialization">תחום התמחות</string>
     <string name="experience">ניסיון</string>
     <string name="logout">התנתק</string>
     <string name="profile_updated">הפרופיל עודכן בהצלחה</string>
-    <string name="welcome_to_techlift">Welcome to TechLift</string>
+    <string name="welcome_to_techlift">ברוכים הבאים ל-TechLift</string>
     <string name="profile_image">תמונת פרופיל</string>
     <string name="view_posts">צפה בפוסטים</string>
     <string name="share_location">שתף מיקום</string>
@@ -99,21 +102,21 @@
     <string name="community_map_instructions">לחץ על המשתמשים במפה לראות את הפרופיל שלהם</string>
     
     <!-- Bottom Navigation -->
-    <string name="title_home">Home</string>
-    <string name="title_roadmaps">Roadmaps</string>
-    <string name="title_learn">Learn</string>
-    <string name="title_profile">Profile</string>
+    <string name="title_home">בית</string>
+    <string name="title_roadmaps">מפות דרכים</string>
+    <string name="title_learn">למידה</string>
+    <string name="title_profile">פרופיל</string>
     
     <!-- Learn Page -->
-    <string name="learn_title">Learning Center</string>
-    <string name="courses_title">Courses</string>
-    <string name="tutorials_title">Tutorials</string>
-    <string name="resources_title">Resources</string>
+    <string name="learn_title">מרכז הלמידה</string>
+    <string name="courses_title">קורסים</string>
+    <string name="tutorials_title">מדריכים</string>
+    <string name="resources_title">משאבים</string>
     
     <!-- Home Page -->
-    <string name="home_title">Home</string>
-    <string name="welcome_message">Welcome to TechLift</string>
-    <string name="progress_overview">Your Progress</string>
-    <string name="recommended_courses">Recommended for You</string>
-    <string name="recent_activity">Recent Activity</string>
+    <string name="home_title">בית</string>
+    <string name="welcome_message">ברוכים הבאים ל-TechLift</string>
+    <string name="progress_overview">ההתקדמות שלך</string>
+    <string name="recommended_courses">מומלץ עבורך</string>
+    <string name="recent_activity">פעילות אחרונה</string>
 </resources>

@@ -197,16 +197,9 @@ class CommunityFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindow
             }
         }
         
-        // Center the map on the current user if available
-        if (currentUserLocation != null) {
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentUserLocation, 10f))
-        } else {
-            // Fallback to first user
-            val firstLocation = MockDataProvider.mockUserLocations.values.firstOrNull()
-            if (firstLocation != null) {
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(firstLocation, 10f))
-            }
-        }
+        // Center the map on the Google campus area
+        val googleCampusCenter = LatLng(37.4220, -122.0841) // Googleplex
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(googleCampusCenter, 15f))
     }
     
     private fun createUserMarker(user: User, location: LatLng) {
@@ -358,6 +351,13 @@ class CommunityFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnInfoWindow
                 location?.let {
                     val latLng = LatLng(it.latitude, it.longitude)
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM))
+                    
+                    // Also update the current user's marker position if it exists
+                    val currentUserMarker = markers.find { marker ->
+                        val user = marker.tag as? User
+                        user?.uid == "current_user"
+                    }
+                    currentUserMarker?.position = latLng
                 }
             }
         }

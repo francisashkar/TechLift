@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.techlift.adapter.RoadmapAdapter
 import com.example.techlift.model.Roadmap
 import com.google.android.material.textfield.TextInputEditText
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class RoadmapsActivity : AppCompatActivity(), RoadmapAdapter.OnRoadmapClickListener {
     private lateinit var toolbar: Toolbar
@@ -17,39 +19,42 @@ class RoadmapsActivity : AppCompatActivity(), RoadmapAdapter.OnRoadmapClickListe
     private lateinit var roadmapsRecyclerView: RecyclerView
     private lateinit var roadmapAdapter: RoadmapAdapter
 
-    // מסלולים חדשים - כל 5 המסלולים עובדים
+    // קורסים נוכחיים - כל 5 הקורסים עובדים
     private val mockRoadmaps = listOf(
         Roadmap(
             id = "frontend",
-            title = "פיתוח צד לקוח",
+            title = "קורס פיתוח צד לקוח",
             description = "למד HTML, CSS, JavaScript, React, Vue.js וטכנולוגיות מודרניות לפיתוח ממשקי משתמש",
-            progress = 30
+            progress = 0
         ),
         Roadmap(
             id = "backend",
-            title = "פיתוח צד שרת",
+            title = "קורס פיתוח צד שרת",
             description = "למד Node.js, Python, Java, Spring Boot, APIs ופיתוח מערכות צד שרת",
-            progress = 45
+            progress = 0
         ),
         Roadmap(
             id = "mobile",
-            title = "פיתוח אפליקציות מובייל",
+            title = "קורס פיתוח אפליקציות מובייל",
             description = "למד React Native, Flutter, Android Native ו-iOS development",
-            progress = 20
+            progress = 0
         ),
         Roadmap(
             id = "devops",
-            title = "DevOps והנדסת תשתיות",
+            title = "קורס DevOps והנדסת תשתיות",
             description = "למד Docker, Kubernetes, CI/CD, AWS, Azure וניהול תשתיות ענן",
-            progress = 15
+            progress = 0
         ),
         Roadmap(
             id = "ai",
-            title = "בינה מלאכותית ולמידת מכונה",
+            title = "קורס בינה מלאכותית ולמידת מכונה",
             description = "למד Python, TensorFlow, PyTorch, NLP, Computer Vision ו-ML algorithms",
-            progress = 10
+            progress = 0
         )
     )
+    
+    private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +72,9 @@ class RoadmapsActivity : AppCompatActivity(), RoadmapAdapter.OnRoadmapClickListe
 
         // הגדרת הרשימה
         setupRecyclerView()
+        
+        // Load real progress from Firebase
+        loadUserProgress()
     }
 
     private fun setupRecyclerView() {
@@ -74,6 +82,39 @@ class RoadmapsActivity : AppCompatActivity(), RoadmapAdapter.OnRoadmapClickListe
         roadmapsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@RoadmapsActivity)
             adapter = roadmapAdapter
+        }
+    }
+    
+    private fun loadUserProgress() {
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            firestore.collection("users").document(currentUser.uid)
+                .collection("completedCourses")
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    // Update course completion status based on completed courses
+                    val completedCourseIds = querySnapshot.documents.mapNotNull { doc ->
+                        doc.getString("courseId")
+                    }.toSet()
+                    
+                    val updatedRoadmaps = mockRoadmaps.map { roadmap ->
+                        if (completedCourseIds.contains(roadmap.id)) {
+                            roadmap.copy(progress = 100) // Mark as completed
+                        } else {
+                            roadmap.copy(progress = 0) // Mark as not completed
+                        }
+                    }
+                    
+                    // Update adapter with completion status
+                    roadmapAdapter.updateRoadmaps(updatedRoadmaps)
+                }
+                .addOnFailureListener {
+                    // If failed to load, show all courses as not completed
+                    val updatedRoadmaps = mockRoadmaps.map { roadmap ->
+                        roadmap.copy(progress = 0)
+                    }
+                    roadmapAdapter.updateRoadmaps(updatedRoadmaps)
+                }
         }
     }
 

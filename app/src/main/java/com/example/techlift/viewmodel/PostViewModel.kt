@@ -63,7 +63,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 postRepository.fetchPosts()
                 _postsLoadingState.value = PostsLoadingState.Success
             } catch (e: Exception) {
-                _postsLoadingState.value = PostsLoadingState.Error(e.message ?: "Failed to load posts")
+                _postsLoadingState.value = PostsLoadingState.Error(e.message ?: "שגיאה בטעינת פוסטים")
             }
         }
     }
@@ -73,16 +73,20 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         _createPostState.value = CreatePostState.Loading
         
         viewModelScope.launch {
-            val result = postRepository.createPost(title, content, imageUri)
-            
-            result.fold(
-                onSuccess = { post ->
-                    _createPostState.value = CreatePostState.Success(post)
-                },
-                onFailure = { exception ->
-                    _createPostState.value = CreatePostState.Error(exception.message ?: "Failed to create post")
-                }
-            )
+            try {
+                val result = postRepository.createPost(title, content, imageUri)
+                
+                result.fold(
+                    onSuccess = { post ->
+                        _createPostState.value = CreatePostState.Success(post)
+                    },
+                    onFailure = { exception ->
+                        _createPostState.value = CreatePostState.Error(exception.message ?: "שגיאה ביצירת פוסט")
+                    }
+                )
+            } catch (e: Exception) {
+                _createPostState.value = CreatePostState.Error(e.message ?: "שגיאה ביצירת פוסט")
+            }
         }
     }
     
@@ -91,16 +95,20 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         _updatePostState.value = UpdatePostState.Loading
         
         viewModelScope.launch {
-            val result = postRepository.updatePost(postId, title, content, imageUri)
-            
-            result.fold(
-                onSuccess = { post ->
-                    _updatePostState.value = UpdatePostState.Success(post)
-                },
-                onFailure = { exception ->
-                    _updatePostState.value = UpdatePostState.Error(exception.message ?: "Failed to update post")
-                }
-            )
+            try {
+                val result = postRepository.updatePost(postId, title, content, imageUri)
+                
+                result.fold(
+                    onSuccess = { post ->
+                        _updatePostState.value = UpdatePostState.Success(post)
+                    },
+                    onFailure = { exception ->
+                        _updatePostState.value = UpdatePostState.Error(exception.message ?: "שגיאה בעדכון פוסט")
+                    }
+                )
+            } catch (e: Exception) {
+                _updatePostState.value = UpdatePostState.Error(e.message ?: "שגיאה בעדכון פוסט")
+            }
         }
     }
     
@@ -109,16 +117,20 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         _deletePostState.value = DeletePostState.Loading
         
         viewModelScope.launch {
-            val result = postRepository.deletePost(postId)
-            
-            result.fold(
-                onSuccess = { success ->
-                    _deletePostState.value = DeletePostState.Success(postId)
-                },
-                onFailure = { exception ->
-                    _deletePostState.value = DeletePostState.Error(exception.message ?: "Failed to delete post")
-                }
-            )
+            try {
+                val result = postRepository.deletePost(postId)
+                
+                result.fold(
+                    onSuccess = { success ->
+                        _deletePostState.value = DeletePostState.Success(postId)
+                    },
+                    onFailure = { exception ->
+                        _deletePostState.value = DeletePostState.Error(exception.message ?: "שגיאה במחיקת פוסט")
+                    }
+                )
+            } catch (e: Exception) {
+                _deletePostState.value = DeletePostState.Error(e.message ?: "שגיאה במחיקת פוסט")
+            }
         }
     }
     

@@ -3,15 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="3dp"
     app:cardBackgroundColor="@android:color/white">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/profile_image"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:scaleType="centerCrop"
                 android:contentDescription="@string/profile_image"
                 app:srcCompat="@drawable/ic_profile" />
@@ -31,13 +31,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_marginStart="16dp">
+                android:layout_marginStart="8dp">
 
                 <TextView
                     android:id="@+id/profile_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
                     android:text="שם המשתמש" />
@@ -46,7 +46,7 @@
                     android:id="@+id/profile_role"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="14sp"
+                    android:textSize="11sp"
                     android:textColor="@android:color/darker_gray"
                     android:text="תפקיד" />
 
@@ -57,25 +57,26 @@
             android:id="@+id/profile_experience"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:textSize="11sp"
             android:text="ניסיון: 3 שנים" />
 
         <TextView
             android:id="@+id/profile_email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:textSize="11sp"
             android:text="email@example.com" />
 
         <Button
             android:id="@+id/view_posts_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:text="צפה בפוסטים"
-            android:textSize="12sp"
+            android:textSize="10sp"
+            android:minHeight="32dp"
             style="@style/Widget.MaterialComponents.Button" />
 
     </LinearLayout>

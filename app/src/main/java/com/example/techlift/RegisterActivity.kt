@@ -17,6 +17,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import kotlinx.coroutines.launch
 import java.util.Date
+import android.os.Handler
+import android.os.Looper
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -34,12 +36,12 @@ class RegisterActivity : AppCompatActivity() {
     private val firebaseHelper = FirebaseHelper.getInstance()
 
     private val experienceLevels = arrayOf(
-        "No Prior Experience",
-        "Self-learning / Courses",
-        "Personal Projects",
-        "Work Experience up to 1 year",
-        "1-3 Years Experience",
-        "3+ Years Experience"
+        "אין ניסיון קודם",
+        "למידה עצמית / קורסים",
+        "פרויקטים אישיים",
+        "ניסיון עבודה עד שנה",
+        "1-3 שנות ניסיון",
+        "3+ שנות ניסיון"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -149,54 +151,61 @@ class RegisterActivity : AppCompatActivity() {
         val fullName = fullNameInput.text.toString().trim()
         val experience = experienceDropdown.text.toString()
         
-        // Show progress
-        showProgress(true)
-        
-        lifecycleScope.launch {
+        try {
             // Register user with Firebase Auth
-            val registerResult = firebaseHelper.register(email, password, fullName)
-            
-            registerResult.fold(
-                onSuccess = { firebaseUser ->
-                    // Create user model
-                    val user = User(
-                        uid = firebaseUser.uid,
-                        email = email,
-                        displayName = fullName,
-                        specialization = "General", // Default specialization
-                        experience = experience,
-                        createdAt = Date(),
-                        lastLoginAt = Date()
-                    )
-                    
-                    // Save user data to Firestore
-                    val saveResult = firebaseHelper.saveUserData(user)
-                    
-                    saveResult.fold(
-                        onSuccess = {
-                            showProgress(false)
-                            Toast.makeText(this@RegisterActivity, "Registration successful!", Toast.LENGTH_SHORT).show()
-                            navigateToMainActivity()
-                        },
-                        onFailure = { exception ->
-                            showProgress(false)
+            lifecycleScope.launch {
+                val registerResult = firebaseHelper.register(email, password, fullName)
+                registerResult.fold(
+                    onSuccess = { firebaseUser ->
+                        // Save user data to Firestore
+                        try {
+                            val userData = User(
+                                uid = firebaseUser.uid,
+                                email = email,
+                                displayName = fullName,
+                                specialization = "General",
+                                experience = experience,
+                                createdAt = Date(),
+                                lastLoginAt = Date()
+                            )
+                            firebaseHelper.saveUserData(userData)
+                        } catch (e: Exception) {
+                            // Continue even if Firestore save fails
+                        }
+                        
+                        // Show success message
+                        runOnUiThread {
+                            Toast.makeText(this@RegisterActivity, "חשבון נוצר בהצלחה! 🎉", Toast.LENGTH_LONG).show()
+                        }
+                        
+                        // Navigate to login after a short delay
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                            startActivity(intent)
+                            finish()
+                        }, 2000) // 2 seconds delay
+                    },
+                    onFailure = { exception ->
+                        runOnUiThread {
                             Toast.makeText(
                                 this@RegisterActivity,
-                                "Error saving user data: ${exception.message}",
+                                "Registration failed: ${exception.message}",
                                 Toast.LENGTH_LONG
                             ).show()
                         }
-                    )
-                },
-                onFailure = { exception ->
-                    showProgress(false)
-                    Toast.makeText(
-                        this@RegisterActivity,
-                        "Registration failed: ${exception.message}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
-            )
+                    }
+                )
+            }
+        } catch (e: Exception) {
+            // Catch any unexpected exceptions
+            runOnUiThread {
+                Toast.makeText(
+                    this@RegisterActivity,
+                    "Unexpected error: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
     

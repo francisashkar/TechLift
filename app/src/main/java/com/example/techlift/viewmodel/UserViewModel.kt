@@ -43,16 +43,20 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         _profileUpdateState.value = ProfileUpdateState.Loading
         
         viewModelScope.launch {
-            val result = userRepository.updateUserProfile(displayName, specialization, experience)
-            
-            result.fold(
-                onSuccess = { user ->
-                    _profileUpdateState.value = ProfileUpdateState.Success(user)
-                },
-                onFailure = { exception ->
-                    _profileUpdateState.value = ProfileUpdateState.Error(exception.message ?: "Profile update failed")
-                }
-            )
+            try {
+                val result = userRepository.updateUserProfile(displayName, specialization, experience)
+                
+                result.fold(
+                    onSuccess = { user ->
+                        _profileUpdateState.value = ProfileUpdateState.Success(user)
+                    },
+                    onFailure = { exception ->
+                        _profileUpdateState.value = ProfileUpdateState.Error(exception.message ?: "עדכון פרופיל נכשל")
+                    }
+                )
+            } catch (e: Exception) {
+                _profileUpdateState.value = ProfileUpdateState.Error(e.message ?: "שגיאה בעדכון פרופיל")
+            }
         }
     }
     
@@ -61,16 +65,20 @@ class UserViewModel(application: Application) : AndroidViewModel(application) {
         _imageUploadState.value = ImageUploadState.Loading
         
         viewModelScope.launch {
-            val result = userRepository.uploadProfileImage(imageUri)
-            
-            result.fold(
-                onSuccess = { imageUrl ->
-                    _imageUploadState.value = ImageUploadState.Success(imageUrl)
-                },
-                onFailure = { exception ->
-                    _imageUploadState.value = ImageUploadState.Error(exception.message ?: "Image upload failed")
-                }
-            )
+            try {
+                val result = userRepository.uploadProfileImage(imageUri)
+                
+                result.fold(
+                    onSuccess = { imageUrl ->
+                        _imageUploadState.value = ImageUploadState.Success(imageUrl)
+                    },
+                    onFailure = { exception ->
+                        _imageUploadState.value = ImageUploadState.Error(exception.message ?: "העלאת תמונה נכשלה")
+                    }
+                )
+            } catch (e: Exception) {
+                _imageUploadState.value = ImageUploadState.Error(e.message ?: "שגיאה בהעלאת תמונה")
+            }
         }
     }
     

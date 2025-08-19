@@ -62,6 +62,20 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- כפתור סיום קורס -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/completeCourseButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="סיים קורס"
+                android:textSize="16sp"
+                android:padding="16dp"
+                app:cornerRadius="8dp"
+                android:visibility="gone" />
+
             <!-- רשימת השיעורים -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/lessonsRecyclerView"

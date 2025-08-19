@@ -28,7 +28,6 @@ class CreatePostActivity : AppCompatActivity() {
     private lateinit var postImageView: ImageView
     private lateinit var addImageButton: Button
     private lateinit var submitButton: Button
-    private lateinit var progressBar: ProgressBar
     private lateinit var toolbar: Toolbar
 
     private val auth = FirebaseAuth.getInstance()
@@ -60,7 +59,6 @@ class CreatePostActivity : AppCompatActivity() {
         postImageView = findViewById(R.id.postImageView)
         addImageButton = findViewById(R.id.addImageButton)
         submitButton = findViewById(R.id.submitButton)
-        progressBar = findViewById(R.id.progressBar)
         toolbar = findViewById(R.id.toolbar)
     }
 
@@ -110,16 +108,16 @@ class CreatePostActivity : AppCompatActivity() {
             return
         }
         
-        // Show progress
-        progressBar.visibility = View.VISIBLE
+        // Disable submit button to prevent double submission
         submitButton.isEnabled = false
+        submitButton.text = "מפרסם..."
         
         // Get current user
         val currentUser = auth.currentUser
         if (currentUser == null) {
             Toast.makeText(this, "יש להתחבר כדי לפרסם פוסט", Toast.LENGTH_SHORT).show()
-            progressBar.visibility = View.GONE
             submitButton.isEnabled = true
+            submitButton.text = "פרסם פוסט"
             return
         }
         
@@ -145,8 +143,8 @@ class CreatePostActivity : AppCompatActivity() {
                     }
                 }
                 .addOnFailureListener { e ->
-                    progressBar.visibility = View.GONE
                     submitButton.isEnabled = true
+                    submitButton.text = "פרסם פוסט"
                     Toast.makeText(this, "שגיאה בהעלאת התמונה: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
         }
@@ -176,26 +174,26 @@ class CreatePostActivity : AppCompatActivity() {
                 firestore.collection("posts")
                     .add(post)
                     .addOnSuccessListener {
-                        progressBar.visibility = View.GONE
-                        Toast.makeText(this, "הפוסט פורסם בהצלחה!", Toast.LENGTH_SHORT).show()
+                        // Show success message and return to previous screen
+                        Toast.makeText(this, "הפוסט פורסם בהצלחה! 🎉", Toast.LENGTH_LONG).show()
                         finish()
                     }
                     .addOnFailureListener { e ->
-                        progressBar.visibility = View.GONE
                         submitButton.isEnabled = true
+                        submitButton.text = "פרסם פוסט"
                         Toast.makeText(this, "שגיאה בפרסום הפוסט: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             }
             .addOnFailureListener {
-                progressBar.visibility = View.GONE
                 submitButton.isEnabled = true
+                submitButton.text = "פרסם פוסט"
                 Toast.makeText(this, "שגיאה בטעינת נתוני משתמש", Toast.LENGTH_SHORT).show()
             }
     }
     
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == android.R.id.home) {
-            onBackPressed()
+            finish()
             return true
         }
         return super.onOptionsItemSelected(item)

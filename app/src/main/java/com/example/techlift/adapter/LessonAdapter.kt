@@ -16,7 +16,7 @@ import com.google.android.material.card.MaterialCardView
  * @property onLessonClickListener ממשק להאזנה ללחיצות על שיעור
  */
 class LessonAdapter(
-    private val lessons: List<Lesson>,
+    private var lessons: List<Lesson>,
     private val onLessonClickListener: OnLessonClickListener
 ) : RecyclerView.Adapter<LessonAdapter.LessonViewHolder>() {
 
@@ -62,23 +62,18 @@ class LessonAdapter(
 
     override fun onBindViewHolder(holder: LessonViewHolder, position: Int) {
         val lesson = lessons[position]
-        
         holder.titleTextView.text = lesson.title
         holder.descriptionTextView.text = lesson.description
         holder.orderTextView.text = "שיעור ${lesson.order}"
         
-        // הגדרת סטטוס השיעור
-        if (lesson.isCompleted) {
-            holder.statusTextView.text = "הושלם ✓"
-            holder.statusTextView.setTextColor(holder.itemView.context.getColor(R.color.status_completed))
-            holder.statusTextView.setBackgroundColor(holder.itemView.context.getColor(R.color.status_completed))
-            holder.statusTextView.setTextColor(holder.itemView.context.getColor(android.R.color.white))
-        } else {
-            holder.statusTextView.text = "לא הושלם"
-            holder.statusTextView.setTextColor(holder.itemView.context.getColor(R.color.status_in_progress))
-            holder.statusTextView.setBackgroundColor(holder.itemView.context.getColor(android.R.color.transparent))
-        }
+        // Hide status text view - no need to show completion status
+        holder.statusTextView.visibility = View.GONE
     }
 
     override fun getItemCount(): Int = lessons.size
+    
+    fun updateLessons(newLessons: List<Lesson>) {
+        lessons = newLessons
+        notifyDataSetChanged()
+    }
 } 

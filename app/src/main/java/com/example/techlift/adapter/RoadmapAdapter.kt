@@ -16,7 +16,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator
  * @property onRoadmapClickListener ממשק להאזנה ללחיצות על מסלול
  */
 class RoadmapAdapter(
-    private val roadmaps: List<Roadmap>,
+    private var roadmaps: List<Roadmap>,
     private val onRoadmapClickListener: OnRoadmapClickListener
 ) : RecyclerView.Adapter<RoadmapAdapter.RoadmapViewHolder>() {
 
@@ -39,8 +39,8 @@ class RoadmapAdapter(
     inner class RoadmapViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.roadmapTitle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.roadmapDescription)
-        val progressTextView: TextView = itemView.findViewById(R.id.progressText)
         val progressIndicator: LinearProgressIndicator = itemView.findViewById(R.id.progressIndicator)
+        val cardView: View = itemView.findViewById(R.id.roadmapCard)
 
         init {
             // הגדרת מאזין לחיצה על הפריט
@@ -64,9 +64,17 @@ class RoadmapAdapter(
         
         holder.titleTextView.text = roadmap.title
         holder.descriptionTextView.text = roadmap.description
-        holder.progressTextView.text = "${roadmap.progress}%"
-        holder.progressIndicator.progress = roadmap.progress
+        
+        // Set click listener for the card (to navigate to course details)
+        holder.cardView.setOnClickListener {
+            onRoadmapClickListener.onRoadmapClick(roadmap, position)
+        }
     }
 
     override fun getItemCount(): Int = roadmaps.size
+    
+    fun updateRoadmaps(newRoadmaps: List<Roadmap>) {
+        roadmaps = newRoadmaps
+        notifyDataSetChanged()
+    }
 } 

@@ -39,17 +39,21 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _loginState.value = LoginState.Loading
         
         viewModelScope.launch {
-            val result = userRepository.loginUser(email, password)
-            
-            result.fold(
-                onSuccess = { user ->
-                    _currentUser.value = user
-                    _loginState.value = LoginState.Success
-                },
-                onFailure = { exception ->
-                    _loginState.value = LoginState.Error(exception.message ?: "Login failed")
-                }
-            )
+            try {
+                val result = userRepository.loginUser(email, password)
+                
+                result.fold(
+                    onSuccess = { user ->
+                        _currentUser.value = user
+                        _loginState.value = LoginState.Success
+                    },
+                    onFailure = { exception ->
+                        _loginState.value = LoginState.Error(exception.message ?: "התחברות נכשלה")
+                    }
+                )
+            } catch (e: Exception) {
+                _loginState.value = LoginState.Error(e.message ?: "שגיאה בהתחברות")
+            }
         }
     }
     
@@ -58,17 +62,21 @@ class AuthViewModel(application: Application) : AndroidViewModel(application) {
         _registerState.value = RegisterState.Loading
         
         viewModelScope.launch {
-            val result = userRepository.registerUser(email, password, displayName)
-            
-            result.fold(
-                onSuccess = { user ->
-                    _currentUser.value = user
-                    _registerState.value = RegisterState.Success
-                },
-                onFailure = { exception ->
-                    _registerState.value = RegisterState.Error(exception.message ?: "Registration failed")
-                }
-            )
+            try {
+                val result = userRepository.registerUser(email, password, displayName)
+                
+                result.fold(
+                    onSuccess = { user ->
+                        _currentUser.value = user
+                        _registerState.value = RegisterState.Success
+                    },
+                    onFailure = { exception ->
+                        _registerState.value = RegisterState.Error(exception.message ?: "הרשמה נכשלה")
+                    }
+                )
+            } catch (e: Exception) {
+                _registerState.value = RegisterState.Error(e.message ?: "שגיאה בהרשמה")
+            }
         }
     }
     

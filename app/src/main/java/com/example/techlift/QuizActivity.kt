@@ -224,16 +224,44 @@ class QuizActivity : AppCompatActivity() {
                 .collection("completedLessons").document(lessonId)
                 .set(lessonData)
                 .addOnSuccessListener {
-                    // Update user's completed lessons count
-                    firestore.collection("users").document(currentUser.uid)
-                        .get()
-                        .addOnSuccessListener { document ->
-                            val currentCompleted = document?.getLong("completedLessons") ?: 0L
-                            firestore.collection("users").document(currentUser.uid)
-                                .update("completedLessons", currentCompleted + 1)
-                        }
+                    // Just mark lesson as completed, no complex progress calculation
+                    Toast.makeText(this, "השיעור הושלם בהצלחה!", Toast.LENGTH_SHORT).show()
                 }
         }
+    }
+    
+    private fun updateUserProgress(userId: String, completedLessonId: String) {
+        // Get the lesson to determine which course it belongs to
+        val lesson = LearningContentManager.getLessonById(completedLessonId)
+        if (lesson != null) {
+            val courseId = lesson.roadmapId
+            
+            // Simply update the current course ID
+            firestore.collection("users").document(userId)
+                .update("currentCourseId", courseId)
+        }
+    }
+    
+    private fun showCourseCompletionCelebration(courseId: String) {
+        val courseName = when (courseId) {
+            "frontend" -> "פיתוח צד לקוח"
+            "backend" -> "פיתוח צד שרת"
+            "mobile" -> "פיתוח אפליקציות מובייל"
+            "devops" -> "DevOps והנדסת תשתיות"
+            "ai" -> "בינה מלאכותית"
+            else -> "הקורס"
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle("🎉 מזל טוב! 🎉")
+            .setMessage("השלמת בהצלחה את הקורס: $courseName!\n\n" +
+                    "כל השיעורים הושלמו והקוויזים עברו בהצלחה.\n" +
+                    "אתה מוכן לעבור לקורס הבא!")
+            .setPositiveButton("מעולה!") { _, _ ->
+                // Course completed successfully
+            }
+            .setCancelable(false)
+            .show()
     }
     
     override fun onSupportNavigateUp(): Boolean {

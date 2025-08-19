@@ -16,6 +16,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.util.Date
 import java.util.UUID
+import com.example.techlift.data.MockDataProvider
 
 class PostRepository(
     private val postDao: PostDao,
@@ -42,7 +43,7 @@ class PostRepository(
         return postDao.getPostById(postId).map { it?.toPost() }
     }
     
-    // Fetch all posts from Firestore
+    // Fetch all posts from Firestore and merge with mock posts
     suspend fun fetchPosts() {
         withContext(Dispatchers.IO) {
             try {
@@ -53,75 +54,28 @@ class PostRepository(
                     .await()
                 
                 // Convert to Post objects
-                val posts = querySnapshot.documents.mapNotNull { document ->
+                val remotePosts = querySnapshot.documents.mapNotNull { document ->
                     document.toObject(Post::class.java)?.copy(id = document.id)
                 }
                 
-                // If there are no posts in Firestore, create sample posts
-                if (posts.isEmpty()) {
-                    createSamplePosts()
-                    return@withContext
-                }
+                // Merge remote posts with mock posts (dedupe by id, keep newest order)
+                val mergedPosts = (remotePosts + MockDataProvider.mockPosts)
+                    .associateBy { it.id }
+                    .values
+                    .sortedByDescending { it.createdAt }
                 
                 // Save to local database
-                val postEntities = posts.map { PostEntity.fromPost(it) }
+                val postEntities = mergedPosts.map { PostEntity.fromPost(it) }
                 postDao.insertPosts(postEntities)
             } catch (e: Exception) {
-                // If there's an error fetching from Firestore, create sample posts
-                createSamplePosts()
+                // On error, fallback to mock posts only
+                val postEntities = MockDataProvider.mockPosts
+                    .sortedByDescending { it.createdAt }
+                    .map { PostEntity.fromPost(it) }
+                postDao.insertPosts(postEntities)
                 e.printStackTrace()
             }
         }
-    }
-    
-    // Create sample posts for testing
-    private suspend fun createSamplePosts() {
-        val samplePosts = listOf(
-            Post(
-                id = "sample1",
-                userId = "sample_user1",
-                authorName = "יוסי כהן",
-                authorPhotoUrl = "",
-                title = "טיפים ללימוד פיתוח אנדרואיד",
-                content = "אנדרואיד הוא מערכת הפעלה נפלאה לפיתוח אפליקציות. הנה כמה טיפים שעזרו לי בדרך:\n\n" +
-                        "1. התחילו עם הבסיס - למדו Kotlin היטב\n" +
-                        "2. הבינו את מחזור החיים של Activity ו-Fragment\n" +
-                        "3. למדו על ארכיטקטורת MVVM\n" +
-                        "4. תרגלו באמצעות פרויקטים קטנים\n" +
-                        "5. הצטרפו לקהילות מפתחים",
-                createdAt = Date(System.currentTimeMillis() - 86400000), // 1 day ago
-                updatedAt = Date(System.currentTimeMillis() - 86400000)
-            ),
-            Post(
-                id = "sample2",
-                userId = "sample_user2",
-                authorName = "מיכל לוי",
-                authorPhotoUrl = "",
-                title = "המעבר שלי מפיתוח ווב לפיתוח מובייל",
-                content = "אחרי 3 שנים כמפתחת ווב, החלטתי לעבור לפיתוח מובייל. התהליך היה מאתגר אבל מספק מאוד. " +
-                        "הדבר הכי חשוב שלמדתי הוא שהעקרונות של פיתוח טוב הם אוניברסליים - קוד נקי, ארכיטקטורה טובה, " +
-                        "ובדיקות יסודיות חשובים בכל פלטפורמה. אשמח לענות על שאלות למי שמתלבט לגבי מעבר דומה!",
-                createdAt = Date(System.currentTimeMillis() - 172800000), // 2 days ago
-                updatedAt = Date(System.currentTimeMillis() - 172800000)
-            ),
-            Post(
-                id = "sample3",
-                userId = "sample_user3",
-                authorName = "דוד אברהם",
-                authorPhotoUrl = "",
-                title = "פרויקט סיום הקורס שלי - TechLift",
-                content = "רציתי לשתף את פרויקט הסיום שלי בקורס פיתוח אנדרואיד. בניתי אפליקציה בשם TechLift שעוזרת לאנשים " +
-                        "ללמוד טכנולוגיות חדשות באמצעות מסלולי למידה מובנים. השתמשתי ב-MVVM, Room, Firebase, ו-Navigation Component. " +
-                        "האתגר הגדול ביותר היה לשלב בין מסד נתונים מקומי לענן, אבל הצלחתי למצוא פתרון טוב. " +
-                        "אשמח לפידבק והצעות לשיפור!",
-                createdAt = Date(System.currentTimeMillis() - 259200000), // 3 days ago
-                updatedAt = Date(System.currentTimeMillis() - 259200000)
-            )
-        )
-        
-        // Save sample posts to local database
-        val postEntities = samplePosts.map { PostEntity.fromPost(it) }
-        postDao.insertPosts(postEntities)
     }
     
     // Create a new post

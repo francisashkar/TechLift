@@ -37,15 +37,15 @@ class LearnFragment : Fragment() {
     
     private fun setupClickListeners() {
         coursesCard.setOnClickListener {
-            showToast("Courses feature coming soon!")
+            showToast("תכונת הקורסים תגיע בקרוב!")
         }
         
         tutorialsCard.setOnClickListener {
-            showToast("Tutorials feature coming soon!")
+            showToast("תכונת המדריכים תגיע בקרוב!")
         }
         
         resourcesCard.setOnClickListener {
-            showToast("Resources feature coming soon!")
+            showToast("תכונת המשאבים תגיע בקרוב!")
         }
     }
     

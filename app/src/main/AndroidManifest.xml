@@ -68,6 +68,11 @@
             android:name=".CreatePostActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+            
+        <activity
+            android:name=".EditProfileActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         
         <meta-data
             android:name="com.google.android.geo.API_KEY"

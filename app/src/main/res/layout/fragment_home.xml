@@ -75,7 +75,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="סך הכל שיעורים"
+                            android:text="סך הכל קורסים"
                             android:textSize="12sp"
                             android:textColor="@color/secondary" />
                     </LinearLayout>
@@ -101,7 +101,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="הושלמו"
+                            android:text="קורסים שהושלמו"
                             android:textSize="12sp"
                             android:textColor="@color/secondary" />
                     </LinearLayout>
@@ -180,18 +180,96 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="🎯 מסלולי למידה"
+                    android:text="📚 קורסים נוכחיים"
                     android:textAppearance="@style/TextAppearance.TechLift.Headline"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="16dp" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/roadmapsRecyclerView"
+                <!-- כרטיס קורס נוכחי -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/currentCourseCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    tools:listitem="@layout/item_roadmap" />
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="8dp"
+                    app:cardElevation="2dp"
+                    app:strokeColor="@color/primary"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="🎯 הקורס הנוכחי שלך"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/primary"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/currentCourseTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="קורס פיתוח צד לקוח"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/currentCourseDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="HTML, CSS, JavaScript, React - קורס נוכחי"
+                            android:textSize="14sp"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/currentCourseStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="לא הושלם"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:padding="4dp"
+                            android:background="@drawable/rounded_background"
+                            android:textColor="@color/status_in_progress" />
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- קורסים נוכחיים -->
+                <LinearLayout
+                    android:id="@+id/currentCoursesContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- כותרת קורסים שהושלמו -->
+                <TextView
+                    android:id="@+id/completedCoursesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="🏆 קורסים שהושלמו"
+                    android:textAppearance="@style/TextAppearance.TechLift.Headline"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone" />
+
+                <!-- קורסים שהושלמו -->
+                <LinearLayout
+                    android:id="@+id/completedCoursesContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

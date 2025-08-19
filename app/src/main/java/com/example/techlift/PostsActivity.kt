@@ -3,13 +3,18 @@ package com.example.techlift
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techlift.data.MockDataProvider
+import com.example.techlift.model.Post
 import com.example.techlift.ui.adapter.PostAdapter
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 
 class PostsActivity : AppCompatActivity() {
 
@@ -17,6 +22,9 @@ class PostsActivity : AppCompatActivity() {
     private lateinit var postAdapter: PostAdapter
     private lateinit var createPostFab: FloatingActionButton
     private var userId: String? = null
+    
+    private val auth = FirebaseAuth.getInstance()
+    private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,15 +73,74 @@ class PostsActivity : AppCompatActivity() {
     }
 
     private fun loadPosts() {
-        val posts = if (userId != null) {
-            // Filter posts by user ID
-            MockDataProvider.mockPosts.filter { it.userId == userId }
+        if (userId != null) {
+            // Load posts for specific user
+            loadUserPosts(userId!!)
         } else {
-            // Show all posts
-            MockDataProvider.mockPosts
+            // Load all community posts
+            loadAllPosts()
         }
-
-        postAdapter.updatePosts(posts)
+    }
+    
+    private fun loadUserPosts(userId: String) {
+        firestore.collection("posts")
+            .whereEqualTo("userId", userId)
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val posts = querySnapshot.documents.mapNotNull { document ->
+                    Post(
+                        id = document.id,
+                        userId = document.getString("userId") ?: "",
+                        title = document.getString("title") ?: "",
+                        content = document.getString("content") ?: "",
+                        imageUrl = document.getString("imageUrl") ?: "",
+                        authorName = document.getString("authorName") ?: "",
+                        authorPhotoUrl = document.getString("authorPhotoUrl") ?: "",
+                        createdAt = document.getTimestamp("createdAt")?.toDate() ?: java.util.Date(),
+                        likes = document.getLong("likes")?.toInt() ?: 0,
+                        comments = document.getLong("comments")?.toInt() ?: 0
+                    )
+                }
+                postAdapter.updatePosts(posts)
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "שגיאה בטעינת הפוסטים: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+    
+    private fun loadAllPosts() {
+        firestore.collection("posts")
+            .orderBy("createdAt", Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                val remotePosts = querySnapshot.documents.mapNotNull { document ->
+                    Post(
+                        id = document.id,
+                        userId = document.getString("userId") ?: "",
+                        title = document.getString("title") ?: "",
+                        content = document.getString("content") ?: "",
+                        imageUrl = document.getString("imageUrl") ?: "",
+                        authorName = document.getString("authorName") ?: "",
+                        authorPhotoUrl = document.getString("authorPhotoUrl") ?: "",
+                        createdAt = document.getTimestamp("createdAt")?.toDate() ?: java.util.Date(),
+                        likes = document.getLong("likes")?.toInt() ?: 0,
+                        comments = document.getLong("comments")?.toInt() ?: 0
+                    )
+                }
+                // Merge Firestore posts with mock posts, dedupe by id, sort by date desc
+                val merged = (remotePosts + MockDataProvider.mockPosts)
+                    .associateBy { it.id }
+                    .values
+                    .sortedByDescending { it.createdAt }
+                postAdapter.updatePosts(merged)
+            }
+            .addOnFailureListener { e ->
+                // Fallback to mock posts only
+                val fallback = MockDataProvider.mockPosts.sortedByDescending { it.createdAt }
+                postAdapter.updatePosts(fallback)
+                Toast.makeText(this, "שגיאה בטעינת הפוסטים: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -82,5 +149,11 @@ class PostsActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+    
+    override fun onResume() {
+        super.onResume()
+        // Reload posts when returning from CreatePostActivity
+        loadPosts()
     }
 }
